@@ -1,3 +1,4 @@
 # directory exclusions
+__pycache__/
 
 # file exclusions
