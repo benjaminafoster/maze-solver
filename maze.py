@@ -114,3 +114,55 @@ class Maze():
         for i in range(self.num_cols):
             for j in range(self.num_rows):
                 self._cells[i][j].visited = False
+
+    def _solve(self):
+        return self._solve_r(0, 0)
+
+    count = 0
+
+    def _solve_r(self, i, j):
+
+        # call the animate function
+        self._animate()
+
+        # mark the current cell as visited
+        self._cells[i][j].visited = True
+
+        # if at the end cell (the goal) return True
+        if i == self.num_cols - 1 and j == self.num_rows - 1:
+            return True
+
+        # draw moves left
+        if (i > 0 and not self._cells[i][j].has_left_wall and not self._cells[i-1][j].visited):
+            self._cells[i][j].draw_move(self._cells[i-1][j])
+            if self._solve_r(i-1, j):
+                return True
+            else:
+                self._cells[i][j].draw_move(self._cells[i-1][j], True)
+
+        # draw moves right
+        if (i < self.num_cols -1 and not self._cells[i][j].has_right_wall and not self._cells[i+1][j].visited):
+            self._cells[i][j].draw_move(self._cells[i+1][j])
+            if self._solve_r(i+1, j):
+                return True
+            else:
+                self._cells[i][j].draw_move(self._cells[i+1][j], True)
+
+        # draw moves up
+        if (j > 0 and not self._cells[i][j].has_top_wall and not self._cells[i][j-1].visited):
+            self._cells[i][j].draw_move(self._cells[i][j-1])
+            if self._solve_r(i, j-1):
+                return True
+            else:
+                self._cells[i][j].draw_move(self._cells[i][j-1], True)
+
+        # draw moves down
+        if (j < self.num_rows and not self._cells[i][j].has_bottom_wall and not self._cells[i][j+1].visited):
+            self._cells[i][j].draw_move(self._cells[i][j+1])
+            if self._solve_r(i, j+1):
+                return True
+            else:
+                self._cells[i][j].draw_move(self._cells[i][j+1], True)
+
+        # return false if we went the wrong way...need to let the previous cell know
+        return False
